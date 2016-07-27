@@ -1,0 +1,34 @@
+{
+  "name": "selected-facets-display",
+  "version": "1.0.0",
+  "authors": [
+    "Next Century Corporation"
+  ],
+  "description": "Polymer element providing a way to view and remove selected facets in a breadbox.",
+  "keywords": [
+    "web-component",
+    "polymer",
+    "seed"
+  ],
+  "main": "selected-facets-display.html",
+  "license": "http://polymer.github.io/LICENSE.txt",
+  "homepage": "https://github.com/DigElements/selected-facets-display/",
+  "ignore": [
+    "/.*",
+    "/test/"
+  ],
+  "dependencies": {
+    "paper-styles": "PolymerElements/paper-styles#^1.0.1",
+    "iron-icons": "PolymerElements/iron-icons#^1.0.1",
+    "iron-icon": "PolymerElements/iron-icon#^1.0.1",
+    "polymer": "Polymer/polymer#^1.2.0",
+    "dig-common": "DigElements/dig-common#^0.0.4"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "web-component-tester": "^4.0.0"
+  },
+  "resolutions": {
+    "lodash": "^4.12.0"
+  }
+}
