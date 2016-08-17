@@ -1,6 +1,6 @@
 # selected-facets-display
 
-Polymer element providing a way to view and remove selected facets in a breadbox. Can be used with elastic-checkbox-list-filter and checkbox-list-display.
+Polymer element providing a way to view and remove selected facets in a breadbox item. Can be used with elastic-checkbox-list-filter and checkbox-list-display.
 
 Example:
 ```html
