@@ -1,6 +1,6 @@
 {
   "name": "selected-facets-display",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "authors": [
     "Next Century Corporation"
   ],
@@ -18,11 +18,12 @@
     "/test/"
   ],
   "dependencies": {
-    "paper-styles": "PolymerElements/paper-styles#^1.0.1",
+    "polymer": "Polymer/polymer#^1.2.0",
+    "bread-box": "DigElements/bread-box#^1.0.1",
+    "dig-common": "DigElements/dig-common#^0.0.4",
     "iron-icons": "PolymerElements/iron-icons#^1.0.1",
     "iron-icon": "PolymerElements/iron-icon#^1.0.1",
-    "polymer": "Polymer/polymer#^1.2.0",
-    "dig-common": "DigElements/dig-common#^0.0.4"
+    "paper-styles": "PolymerElements/paper-styles#^1.0.1"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
