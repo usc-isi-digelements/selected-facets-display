@@ -89,7 +89,9 @@ Custom property | Description | Default
        * @return {String}
        */
       getFacetProperty: function(key, prop) {
-        return this.facetSelection[key][prop];
+        if(this.facetSelection && this.facetSelection[key]) {
+          return this.facetSelection[key][prop];
+        }
       },
       /**
        * Get all keys for facetSelection object
