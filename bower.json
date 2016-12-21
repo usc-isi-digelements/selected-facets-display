@@ -1,14 +1,12 @@
 {
   "name": "selected-facets-display",
-  "version": "1.0.6",
-  "authors": [
-    "Next Century Corporation"
-  ],
   "description": "A Polymer Element providing a way to view and remove selected facets in a breadbox-item element.",
+  "version": "1.0.6",
+  "authors": ["Next Century Corporation"],
+  "license": "Apache-2.0",
   "keywords": [
     "web-component",
-    "polymer",
-    "seed"
+    "polymer"
   ],
   "main": "selected-facets-display.html",
   "license": "http://polymer.github.io/LICENSE.txt",
