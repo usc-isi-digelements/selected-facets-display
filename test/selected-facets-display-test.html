@@ -74,7 +74,7 @@ limitations under the License.
             assert.equal(element.$$('breadbox-item').title, 'City: Los Angeles, CA');
             assert.equal(element.$$('iron-icon').title, 'Remove Facet');
             assert.equal(element.$$('iron-icon').icon, 'close');
-            assert.equal(element.$$('iron-icon').onTap, element.disableFacet(clickEvent));
+            assert.equal(element.$$('iron-icon').onTap, element._disableFacet(clickEvent));
             done();
           });
         });
@@ -98,7 +98,7 @@ limitations under the License.
           });
         });
 
-        test('disableFacet disables facet', function() {
+        test('_disableFacet disables facet', function() {
           element.facetSelection['Los Angeles, CA'] = {
             text: 'Los Angeles, CA',
             key: 'Los Angeles, CA',
@@ -111,7 +111,7 @@ limitations under the License.
           eventToPassIn.model = {
             facetKey: 'Los Angeles, CA'
           };
-          element.disableFacet(eventToPassIn);
+          element._disableFacet(eventToPassIn);
 
           assert.isFalse(element.facetSelection['Los Angeles, CA'].enabled);
         });
