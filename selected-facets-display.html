@@ -129,7 +129,15 @@ Custom property                     | Description                     | Default
        */
       _disableFacet: function(event) {
         var facetKey = event.model.facetKey;
-        this.facetSelection[facetKey].enabled = false;
+        // Must recreate the object here rather than just setting the enabled property in order for notifyPath to work correctly.
+        this.facetSelection[facetKey] = {
+          category: this.facetSelection[facetKey].category,
+          enabled: false,
+          field: this.facetSelection[facetKey].field,
+          key: this.facetSelection[facetKey].key,
+          text: this.facetSelection[facetKey].text
+        };
+        // Must notifyPath on * because it will not handle a key with a period correctly.
         this.notifyPath('facetSelection.*', this.facetSelection[facetKey]);
       }
     });
