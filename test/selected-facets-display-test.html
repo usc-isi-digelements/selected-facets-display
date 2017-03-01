@@ -117,6 +117,10 @@ limitations under the License.
           assert.isFalse(element.facetSelection['Los Angeles, CA'].enabled);
         });
 
+        test('_getRemoveButtonClass returns correct string value', function() {
+          assert.equal(element._getRemoveButtonClass(), '');
+        });
+
         test('hideRemoveButton hides the remove facet button', function() {
           element.facetSelection['Los Angeles, CA'] = {
             text: 'Los Angeles, CA',
@@ -130,6 +134,7 @@ limitations under the License.
 
           flush(function() {
             assert.equal(element._getFacetSelectionKeys(), 1);
+            assert.equal(element._getRemoveButtonClass(), 'not-shown');
             assert.isNotNull(element.$$('breadbox-item'));
             assert.isNull(element.$$('iron-icon'));
             done();

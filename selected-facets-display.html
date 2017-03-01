@@ -58,16 +58,16 @@ Custom property                     | Description                     | Default
         color: var(--selected-facet-icon-hover-color, --paper-blue-800);
         cursor: pointer;
       }
+      .not-shown {
+        display: none;
+      }
     </style>
 
     <template is="dom-repeat" items="{{_getFacetSelectionKeys(facetSelection.*)}}" as="facetKey">
       <breadbox-item
         text="[[_getFacetProperty(facetKey, 'category')]]: [[_getFacetProperty(facetKey, 'text', facetSelection.*)]]"
         title$="[[_getFacetProperty(facetKey, 'category')]]: [[_getFacetProperty(facetKey, 'text', facetSelection.*)]]">
-
-        <template is="dom-if" if="{{!hideRemoveButton}}">
-          <iron-icon title="Remove" on-tap="_disableFacet" icon="close"></iron-icon>
-        </template>
+        <iron-icon title="Remove" on-tap="_disableFacet" class$="{{_getRemoveButtonClass(hideRemoveButton)}}" icon="close"></iron-icon>
       </breadbox-item>
     </template>
   </template>
@@ -153,6 +153,16 @@ Custom property                     | Description                     | Default
         };
         // Must notifyPath on * because it will not handle a key with a period correctly.
         this.notifyPath('facetSelection.*', this.facetSelection[facetKey]);
+      },
+
+      /**
+       * Determines remove button class (whether or not it is hidden) based on the hideRemoveButton property.
+       *
+       * @return {String}
+       * @private
+       */
+      _getRemoveButtonClass: function() {
+        return this.hideRemoveButton ? 'not-shown' : '';
       }
     });
   </script>
