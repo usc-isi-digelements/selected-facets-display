@@ -65,7 +65,9 @@ Custom property                     | Description                     | Default
         text="[[_getFacetProperty(facetKey, 'category')]]: [[_getFacetProperty(facetKey, 'text', facetSelection.*)]]"
         title$="[[_getFacetProperty(facetKey, 'category')]]: [[_getFacetProperty(facetKey, 'text', facetSelection.*)]]">
 
-        <iron-icon title="Remove" on-tap="_disableFacet" icon="close"></iron-icon>
+        <template is="dom-if" if="{{!hideRemoveButton}}">
+          <iron-icon title="Remove" on-tap="_disableFacet" icon="close"></iron-icon>
+        </template>
       </breadbox-item>
     </template>
   </template>
@@ -90,6 +92,14 @@ Custom property                     | Description                     | Default
             return {};
           },
           notify: true
+        },
+
+        /**
+         * Whether or not to hide the remove button for the facets
+         */
+        hideRemoveButton: {
+          type: Boolean,
+          value: false
         }
       },
 
