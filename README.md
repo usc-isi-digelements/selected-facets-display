@@ -1,6 +1,6 @@
 # selected-facets-display
 
-A Polymer Element providing a way to view and remove selected facets in a breadbox-item element.  Can be used with the [checkbox-list-display](https://github.com/DigElements/checkbox-list-display) element and the [elastic-checkbox-list-filter](https://github.com/DigElements/elastic-checkbox-list-filter) element.
+A Polymer Element providing a way to view and remove selected facets in a breadbox-item element.
 
 Example:
 ```html
