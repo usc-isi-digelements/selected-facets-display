@@ -37,17 +37,17 @@ limitations under the License.
       </selected-facets-display>
     </template>
     <script>
-        (function(document) {
-            var demo = document.querySelector('#demo');
-            demo.facetSelection = {
-              'New York': {text: 'New York, NY', key: 'New York', count: 10, enabled: true, category: 'City'},
-              'Jane Doe': {text: 'Jane Doe', key: 'Jane Doe', count: 10, enabled: true, category: 'Name'},
-              'one two three': {text: 'one two three four five six seven eight nine ten', key: 'one two three', count: 10, enabled: true, category: 'Words'}
-            };
-            demo.stringify = function(object, key) {
-                return JSON.stringify(object.base[key]);
-            };
-        })(document);
+      (function(document) {
+        var demo = document.querySelector('#demo');
+        demo.facetSelection = {
+          'New York': {text: 'New York, NY', key: 'New York', count: 10, enabled: true, category: 'City'},
+          'Jane Doe': {text: 'Jane Doe', key: 'Jane Doe', count: 10, enabled: true, category: 'Name'},
+          'one two three': {text: 'one two three four five six seven eight nine ten', key: 'one two three', count: 10, enabled: true, category: 'Words'}
+        };
+        demo.stringify = function(object, key) {
+          return JSON.stringify(object.base[key]);
+        };
+      })(document);
     </script>
   </body>
 </html>

@@ -42,6 +42,9 @@ limitations under the License.
         test('initial values are correct', function() {
           assert.isObject(element.facetSelection);
           assert.deepEqual(element.facetSelection, {});
+          assert.equal(element.categoryProperty, 'category');
+          assert.equal(element.textProperty, 'text');
+          assert.equal(element.enabledProperty, 'enabled');
           assert.isFalse(element.hideRemoveButton);
           assert.isNull(element.$$('breadbox-item'));
           assert.isNull(element.$$('iron-icon'));
@@ -67,8 +70,45 @@ limitations under the License.
 
             assert.equal(facetKeys.length, 1);
             assert.equal(facetKeys[0], 'Los Angeles, CA');
-            assert.equal(element._getFacetProperty('Los Angeles, CA', 'category'), facet.category);
-            assert.equal(element._getFacetProperty('Los Angeles, CA', 'text'), facet.text);
+            assert.equal(element._getFacetProperty('Los Angeles, CA', element.categoryProperty), facet.category);
+            assert.equal(element._getFacetProperty('Los Angeles, CA', element.textProperty), facet.text);
+            assert.isNotNull(element.$$('breadbox-item'));
+            assert.isNotNull(element.$$('iron-icon'));
+            assert.equal(element.$$('breadbox-item').text, 'City: Los Angeles, CA');
+            assert.equal(element.$$('breadbox-item').title, 'City: Los Angeles, CA');
+            assert.equal(element.$$('iron-icon').title, 'Remove');
+            assert.equal(element.$$('iron-icon').icon, 'close');
+            assert.equal(element.$$('iron-icon').onTap, element._disableFacet(clickEvent));
+            done();
+          });
+        });
+
+        test('_getFacetSelectionKeys and _getFacetProperty still return appropriate values when facet properties are customized', function(done) {
+          element.categoryProperty = 'title';
+          element.textProperty = 'content';
+          element.enabledProperty = 'isTrue';
+
+          element.facetSelection['Los Angeles, CA'] = {
+            content: 'Los Angeles, CA',
+            key: 'Los Angeles, CA',
+            count: 10,
+            isTrue: true,
+            title: 'City'
+          };
+          element.notifyPath('facetSelection.*', element.facetSelection['Los Angeles, CA']);
+
+          flush(function() {
+            var facet = element.facetSelection['Los Angeles, CA'];
+            var facetKeys = element._getFacetSelectionKeys();
+            var clickEvent = document.createEvent('UIEvent');
+            clickEvent.model = {
+              facetKey: 'Los Angeles, CA'
+            };
+
+            assert.equal(facetKeys.length, 1);
+            assert.equal(facetKeys[0], 'Los Angeles, CA');
+            assert.equal(element._getFacetProperty('Los Angeles, CA', element.categoryProperty), facet.title);
+            assert.equal(element._getFacetProperty('Los Angeles, CA', element.textProperty), facet.content);
             assert.isNotNull(element.$$('breadbox-item'));
             assert.isNotNull(element.$$('iron-icon'));
             assert.equal(element.$$('breadbox-item').text, 'City: Los Angeles, CA');
@@ -114,7 +154,13 @@ limitations under the License.
           };
           element._disableFacet(eventToPassIn);
 
-          assert.isFalse(element.facetSelection['Los Angeles, CA'].enabled);
+          flush(function() {
+            assert.isFalse(element.facetSelection['Los Angeles, CA'][element.enabledProperty]);
+            assert.equal(element._getFacetSelectionKeys(), 0);
+            assert.isNull(element.$$('breadbox-item'));
+            assert.isNull(element.$$('iron-icon'));
+            done();
+          });
         });
 
         test('_getRemoveButtonClass returns correct string value', function() {

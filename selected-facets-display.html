@@ -26,7 +26,9 @@ A Polymer Element providing a way to view and remove selected facets in a breadb
 
 ### Example
 ```html
-<selected-facets-display facet-selection="{{countryFacetSelection}}"></selected-facets-display>
+  <selected-facets-display
+    facet-selection="{{countryFacetSelection}}">
+  </selected-facets-display>
 ```
 
 ### Styling
@@ -46,8 +48,8 @@ Custom property                     | Description                     | Default
   <template>
     <style>
       breadbox-item {
-        --breadbox-item-bg-color: var(--selected-facet-bg-color);
-        --breadbox-item-text-color: var(--selected-facet-text-color);
+        --breadbox-item-bg-color: var(--selected-facet-bg-color, --paper-blue-grey-200);
+        --breadbox-item-text-color: var(--selected-facet-text-color, --paper-blue-grey-800);
       }
       breadbox-item ::content iron-icon {
         --iron-icon-height: 18px;
@@ -65,8 +67,8 @@ Custom property                     | Description                     | Default
 
     <template is="dom-repeat" items="{{_getFacetSelectionKeys(facetSelection.*)}}" as="facetKey">
       <breadbox-item
-        text="[[_getFacetProperty(facetKey, 'category')]]: [[_getFacetProperty(facetKey, 'text', facetSelection.*)]]"
-        title$="[[_getFacetProperty(facetKey, 'category')]]: [[_getFacetProperty(facetKey, 'text', facetSelection.*)]]">
+        text="[[_getFacetProperty(facetKey, categoryProperty)]]: [[_getFacetProperty(facetKey, textProperty, facetSelection.*)]]"
+        title$="[[_getFacetProperty(facetKey, categoryProperty)]]: [[_getFacetProperty(facetKey, textProperty, facetSelection.*)]]">
         <iron-icon title="Remove" on-tap="_disableFacet" class$="{{_getRemoveButtonClass(hideRemoveButton)}}" icon="close"></iron-icon>
       </breadbox-item>
     </template>
@@ -78,10 +80,53 @@ Custom property                     | Description                     | Default
 
       properties: {
         /**
+         * (Optional)
+         *
+         * Name for the category property in the facetSelection object.
+         *
+         * @type {String}
+         * @default 'category'
+         */
+        categoryProperty: {
+          type: String,
+          value: 'category'
+        },
+
+        /**
+         * (Optional)
+         *
+         * Name for the text property in the facetSelection object.
+         *
+         * @type {String}
+         * @default 'text'
+         */
+        textProperty: {
+          type: String,
+          value: 'text'
+        },
+
+        /**
+         * (Optional)
+         *
+         * Name of the enabled property in the facetSelection object.
+         *
+         * @type {String}
+         * @default 'enabled'
+         */
+        enabledProperty: {
+          type: String,
+          value: 'enabled'
+        },
+
+        /**
          * (Required)
          *
-         * Contains state of facet checkboxes to persist selection state between queries.  This object maps a facet bucket key to an object with properties:
+         * Contains state of facet checkboxes to persist selection state between queries.  This object maps a
+         * facet bucket key to an object with these default properties:
          * {String} category, {Boolean} enabled, {String} key, {String} text
+         *
+         * The expected state can be changed (see date-picker-display and terms-transformer, as well as
+         * properties used to access category, text, and enabled values in this component).
          *
          * @type {Object}
          * @default {}
@@ -130,7 +175,7 @@ Custom property                     | Description                     | Default
         var me = this;
         var keys = _.keys(this.facetSelection);
         var filtered = _.filter(keys, function(key) {
-          return me.facetSelection[key].enabled === true;
+          return me.facetSelection[key][me.enabledProperty] === true;
         });
         return filtered;
       },
@@ -144,13 +189,9 @@ Custom property                     | Description                     | Default
       _disableFacet: function(event) {
         var facetKey = event.model.facetKey;
         // Must recreate the object here rather than just setting the enabled property in order for notifyPath to work correctly.
-        this.facetSelection[facetKey] = {
-          category: this.facetSelection[facetKey].category,
-          enabled: false,
-          field: this.facetSelection[facetKey].field,
-          key: this.facetSelection[facetKey].key,
-          text: this.facetSelection[facetKey].text
-        };
+        var newState = _.cloneDeep(this.facetSelection[facetKey]);
+        newState[this.enabledProperty] = false;
+        this.facetSelection[facetKey] = newState;
         // Must notifyPath on * because it will not handle a key with a period correctly.
         this.notifyPath('facetSelection.*', this.facetSelection[facetKey]);
       },
