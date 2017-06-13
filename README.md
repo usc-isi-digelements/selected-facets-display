@@ -3,8 +3,24 @@
 A Polymer Element providing a way to view and remove selected facets in a breadbox-item element.
 
 Example:
+### Example
+```js
+var facets = {
+  city: {
+    'New York, NY': {
+      category: 'City',
+      enabled: true,
+      text: 'New York, NY'
+    }
+  }
+};
+```
+
 ```html
-<selected-facets-display facet-selection="{{countryFacetSelection}}"></selected-facets-display>
+<selected-facets-display
+  facet-key="city"
+  facets="{{facets}}">
+</selected-facets-display>
 ```
 
 ### Styling

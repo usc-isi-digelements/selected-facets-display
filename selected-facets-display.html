@@ -25,10 +25,23 @@ limitations under the License.
 A Polymer Element providing a way to view and remove selected facets in a breadbox-item element.
 
 ### Example
+```js
+var facets = {
+  city: {
+    'New York, NY': {
+      category: 'City',
+      enabled: true,
+      text: 'New York, NY'
+    }
+  }
+};
+```
+
 ```html
-  <selected-facets-display
-    facet-selection="{{countryFacetSelection}}">
-  </selected-facets-display>
+<selected-facets-display
+  facet-key="city"
+  facets="{{facets}}">
+</selected-facets-display>
 ```
 
 ### Styling
@@ -65,11 +78,11 @@ Custom property                     | Description                     | Default
       }
     </style>
 
-    <template is="dom-repeat" items="{{_getFacetSelectionKeys(facetSelection.*)}}" as="facetKey">
+    <template is="dom-repeat" items="[[_getFacetTerms(facetKey, enabledProperty, facets.*)]]" as="term">
       <breadbox-item
-        text="[[_getFacetProperty(facetKey, categoryProperty)]]: [[_getFacetProperty(facetKey, textProperty, facetSelection.*)]]"
-        title$="[[_getFacetProperty(facetKey, categoryProperty)]]: [[_getFacetProperty(facetKey, textProperty, facetSelection.*)]]">
-        <iron-icon title="Remove" on-tap="_disableFacet" class$="{{_getRemoveButtonClass(hideRemoveButton)}}" icon="close"></iron-icon>
+        text="[[_getTermProperty(facetKey, term, categoryProperty)]]: [[_getTermProperty(facetKey, term, textProperty, facets.*)]]"
+        title$="[[_getTermProperty(facetKey, term, categoryProperty)]]: [[_getTermProperty(facetKey, term, textProperty, facets.*)]]">
+        <iron-icon title="Remove" on-tap="_disableFacet" class$="[[_getRemoveButtonClass(hideRemoveButton)]]" icon="close"></iron-icon>
       </breadbox-item>
     </template>
   </template>
@@ -82,7 +95,7 @@ Custom property                     | Description                     | Default
         /**
          * (Optional)
          *
-         * Name for the category property in the facetSelection object.
+         * Name for the category property in the objects in `facets`.
          *
          * @type {String}
          * @default 'category'
@@ -95,20 +108,7 @@ Custom property                     | Description                     | Default
         /**
          * (Optional)
          *
-         * Name for the text property in the facetSelection object.
-         *
-         * @type {String}
-         * @default 'text'
-         */
-        textProperty: {
-          type: String,
-          value: 'text'
-        },
-
-        /**
-         * (Optional)
-         *
-         * Name of the enabled property in the facetSelection object.
+         * Name of the enabled property in the objects in `facets`.
          *
          * @type {String}
          * @default 'enabled'
@@ -119,11 +119,33 @@ Custom property                     | Description                     | Default
         },
 
         /**
+         * (Optional)
+         *
+         * Name for the text property in the objects in `facets`.
+         *
+         * @type {String}
+         * @default 'text'
+         */
+        textProperty: {
+          type: String,
+          value: 'text'
+        },
+
+        /**
          * (Required)
          *
-         * Contains state of facet checkboxes to persist selection state between queries.  This object maps a
-         * facet bucket key to an object with these default properties:
-         * {String} category, {Boolean} enabled, {String} key, {String} text
+         * A key in `facets`.
+         */
+        facetKey: {
+          type: String
+        },
+
+        /**
+         * (Required)
+         *
+         * Keys mapped to facet objects that contain the state of facet checkboxes to persist selection state between
+         * queries.  A facet object contains terms mapped to objects with these default properties:
+         * {String} `category`, {Boolean} `enabled`, {String} `text`
          *
          * The expected state can be changed (see date-picker-display and terms-transformer, as well as
          * properties used to access category, text, and enabled values in this component).
@@ -131,12 +153,12 @@ Custom property                     | Description                     | Default
          * @type {Object}
          * @default {}
          */
-        facetSelection: {
+        facets: {
+          notify: true,
           type: Object,
           value: function() {
             return {};
-          },
-          notify: true
+          }
         },
 
         /**
@@ -152,32 +174,31 @@ Custom property                     | Description                     | Default
       },
 
       /**
-       * Obtains sub property of key specified in facetSelection.
+       * Returns the string at the given property in the given term for the facets object in `facets` at the given key.
        *
-       * @param {String} key of facet in facetSelection
-       * @param {String} prop - subproperty of key
+       * @param {String} facetKey
+       * @param {String} term
+       * @param {String} property
        * @return {String}
        * @private
        */
-      _getFacetProperty: function(key, prop) {
-        if(this.facetSelection && this.facetSelection[key]) {
-          return this.facetSelection[key][prop];
-        }
+      _getTermProperty: function(facetKey, term, property) {
+        return this.facets && this.facets[facetKey] && this.facets[facetKey][term] ? this.facets[facetKey][term][property] : '';
       },
 
       /**
-       * Get all keys for facetSelection object.
+       * Returns all terms for the facets object in `facets` at the given key.
        *
-       * @return {Array} keys
+       * @param {String} facetKey
+       * @param {String} enabledProperty
+       * @return {Array}
        * @private
        */
-      _getFacetSelectionKeys: function() {
+      _getFacetTerms: function(facetKey, enabledProperty) {
         var me = this;
-        var keys = _.keys(this.facetSelection);
-        var filtered = _.filter(keys, function(key) {
-          return me.facetSelection[key][me.enabledProperty] === true;
+        return _.filter(_.keys(this.facets[facetKey] || {}), function(term) {
+          return me.facets[facetKey][term][enabledProperty] === true;
         });
-        return filtered;
       },
 
       /**
@@ -187,23 +208,23 @@ Custom property                     | Description                     | Default
        * @private
        */
       _disableFacet: function(event) {
-        var facetKey = event.model.facetKey;
+        var term = event.model.term;
         // Must recreate the object here rather than just setting the enabled property in order for notifyPath to work correctly.
-        var newState = _.cloneDeep(this.facetSelection[facetKey]);
+        var newState = _.cloneDeep(this.facets[this.facetKey][term]);
         newState[this.enabledProperty] = false;
-        this.facetSelection[facetKey] = newState;
+        this.facets[this.facetKey][term] = newState;
         // Must notifyPath on * because it will not handle a key with a period correctly.
-        this.notifyPath('facetSelection.*', this.facetSelection[facetKey]);
+        this.notifyPath(['facets', this.facetKey, '*'], this.facets[this.facetKey][term]);
       },
 
       /**
-       * Determines remove button class (whether or not it is hidden) based on the hideRemoveButton property.
+       * Returns remove button class (whether or not it is hidden).
        *
        * @return {String}
        * @private
        */
-      _getRemoveButtonClass: function() {
-        return this.hideRemoveButton ? 'not-shown' : '';
+      _getRemoveButtonClass: function(hide) {
+        return hide ? 'not-shown' : '';
       }
     });
   </script>

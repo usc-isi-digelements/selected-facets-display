@@ -40,8 +40,9 @@ limitations under the License.
         });
 
         test('initial values are correct', function() {
-          assert.isObject(element.facetSelection);
-          assert.deepEqual(element.facetSelection, {});
+          assert.isUndefined(element.facetKey);
+          assert.isObject(element.facets);
+          assert.deepEqual(element.facets, {});
           assert.equal(element.categoryProperty, 'category');
           assert.equal(element.textProperty, 'text');
           assert.equal(element.enabledProperty, 'enabled');
@@ -50,28 +51,49 @@ limitations under the License.
           assert.isNull(element.$$('iron-icon'));
         });
 
-        test('when facetSelection is added, _getFacetSelectionKeys and _getFacetProperty return appropriate values and breadbox-item appears', function(done) {
-          element.facetSelection['Los Angeles, CA'] = {
-            text: 'Los Angeles, CA',
-            key: 'Los Angeles, CA',
-            count: 10,
-            enabled: true,
-            category: 'City'
+        test('elements are not shown if facetKey is undefined', function(done) {
+          element.facets = {
+            city: {
+              'Los Angeles, CA': {
+                text: 'Los Angeles, CA',
+                key: 'Los Angeles, CA',
+                count: 10,
+                enabled: true,
+                category: 'City'
+              }
+            }
           };
-          element.notifyPath('facetSelection.*', element.facetSelection['Los Angeles, CA']);
 
           flush(function() {
-            var facet = element.facetSelection['Los Angeles, CA'];
-            var facetKeys = element._getFacetSelectionKeys();
+            assert.isNull(element.$$('breadbox-item'));
+            assert.isNull(element.$$('iron-icon'));
+            done();
+          });
+        });
+
+        test('when facets are added, _getFacetTerms and _getTermProperty return appropriate values and breadbox-item appears', function(done) {
+          element.facets = {
+            city: {
+              'Los Angeles, CA': {
+                text: 'Los Angeles, CA',
+                key: 'Los Angeles, CA',
+                count: 10,
+                enabled: true,
+                category: 'City'
+              }
+            }
+          };
+          element.facetKey = 'city';
+
+          flush(function() {
             var clickEvent = document.createEvent('UIEvent');
             clickEvent.model = {
-              facetKey: 'Los Angeles, CA'
+              term: 'Los Angeles, CA'
             };
 
-            assert.equal(facetKeys.length, 1);
-            assert.equal(facetKeys[0], 'Los Angeles, CA');
-            assert.equal(element._getFacetProperty('Los Angeles, CA', element.categoryProperty), facet.category);
-            assert.equal(element._getFacetProperty('Los Angeles, CA', element.textProperty), facet.text);
+            assert.deepEqual(element._getFacetTerms('city', 'enabled'), ['Los Angeles, CA']);
+            assert.equal(element._getTermProperty('city', 'Los Angeles, CA', 'category'), 'City');
+            assert.equal(element._getTermProperty('city', 'Los Angeles, CA', 'text'), 'Los Angeles, CA');
             assert.isNotNull(element.$$('breadbox-item'));
             assert.isNotNull(element.$$('iron-icon'));
             assert.equal(element.$$('breadbox-item').text, 'City: Los Angeles, CA');
@@ -83,32 +105,33 @@ limitations under the License.
           });
         });
 
-        test('_getFacetSelectionKeys and _getFacetProperty still return appropriate values when facet properties are customized', function(done) {
+        test('_getFacetTerms and _getTermProperty still return appropriate values when facet properties are customized', function(done) {
           element.categoryProperty = 'title';
           element.textProperty = 'content';
-          element.enabledProperty = 'isTrue';
+          element.enabledProperty = 'on';
 
-          element.facetSelection['Los Angeles, CA'] = {
-            content: 'Los Angeles, CA',
-            key: 'Los Angeles, CA',
-            count: 10,
-            isTrue: true,
-            title: 'City'
+          element.facets = {
+            city: {
+              'Los Angeles, CA': {
+                content: 'Los Angeles, CA',
+                key: 'Los Angeles, CA',
+                count: 10,
+                on: true,
+                title: 'City'
+              }
+            }
           };
-          element.notifyPath('facetSelection.*', element.facetSelection['Los Angeles, CA']);
+          element.facetKey = 'city';
 
           flush(function() {
-            var facet = element.facetSelection['Los Angeles, CA'];
-            var facetKeys = element._getFacetSelectionKeys();
             var clickEvent = document.createEvent('UIEvent');
             clickEvent.model = {
-              facetKey: 'Los Angeles, CA'
+              term: 'Los Angeles, CA'
             };
 
-            assert.equal(facetKeys.length, 1);
-            assert.equal(facetKeys[0], 'Los Angeles, CA');
-            assert.equal(element._getFacetProperty('Los Angeles, CA', element.categoryProperty), facet.title);
-            assert.equal(element._getFacetProperty('Los Angeles, CA', element.textProperty), facet.content);
+            assert.deepEqual(element._getFacetTerms('city', 'on'), ['Los Angeles, CA']);
+            assert.equal(element._getTermProperty('city', 'Los Angeles, CA', 'title'), 'City');
+            assert.equal(element._getTermProperty('city', 'Los Angeles, CA', 'content'), 'Los Angeles, CA');
             assert.isNotNull(element.$$('breadbox-item'));
             assert.isNotNull(element.$$('iron-icon'));
             assert.equal(element.$$('breadbox-item').text, 'City: Los Angeles, CA');
@@ -120,69 +143,84 @@ limitations under the License.
           });
         });
 
-        test('when facetSelection is unchecked, _getFacetSelectionKeys returns appropriate value and no breadbox-item appears', function(done) {
-          element.facetSelection['Los Angeles, CA'] = {
-            text: 'Los Angeles, CA',
-            key: 'Los Angeles, CA',
-            count: 10,
-            enabled: false,
-            category: 'City'
+        test('when facets is unchecked, _getFacetTerms returns appropriate value and no breadbox-item appears', function(done) {
+          element.facets = {
+            city: {
+              'Los Angeles, CA': {
+                text: 'Los Angeles, CA',
+                key: 'Los Angeles, CA',
+                count: 10,
+                enabled: false,
+                category: 'City'
+              }
+            }
           };
-          element.notifyPath('facetSelection.*', element.facetSelection['Los Angeles, CA']);
+          element.facetKey = 'city';
 
           flush(function() {
-            var facetKeys = element._getFacetSelectionKeys();
-            assert.equal(facetKeys.length, 0);
+            assert.deepEqual(element._getFacetTerms('city', 'enabled'), []);
             assert.isNull(element.$$('breadbox-item'));
             assert.isNull(element.$$('iron-icon'));
             done();
           });
         });
 
-        test('_disableFacet disables facet', function() {
-          element.facetSelection['Los Angeles, CA'] = {
-            text: 'Los Angeles, CA',
-            key: 'Los Angeles, CA',
-            count: 10,
-            enabled: true,
-            category: 'City'
+        test('_disableFacet disables facet', function(done) {
+          element.facets = {
+            city: {
+              'Los Angeles, CA': {
+                text: 'Los Angeles, CA',
+                key: 'Los Angeles, CA',
+                count: 10,
+                enabled: true,
+                category: 'City'
+              }
+            }
           };
+          element.facetKey = 'city';
 
-          var eventToPassIn = document.createEvent('UIEvent');
-          eventToPassIn.model = {
-            facetKey: 'Los Angeles, CA'
-          };
-          element._disableFacet(eventToPassIn);
-
-          flush(function() {
-            assert.isFalse(element.facetSelection['Los Angeles, CA'][element.enabledProperty]);
-            assert.equal(element._getFacetSelectionKeys(), 0);
+          element.onFacetsChange = function() {
+            assert.isFalse(element.facets.city['Los Angeles, CA'].enabled);
+            assert.deepEqual(element._getFacetTerms('city', 'enabled'), []);
             assert.isNull(element.$$('breadbox-item'));
             assert.isNull(element.$$('iron-icon'));
             done();
-          });
+          };
+
+          element.listen(element, 'facets-changed', 'onFacetsChange');
+
+          var clickEvent = document.createEvent('UIEvent');
+          clickEvent.model = {
+            term: 'Los Angeles, CA'
+          };
+          element._disableFacet(clickEvent);
         });
 
         test('_getRemoveButtonClass returns correct string value', function() {
-          assert.equal(element._getRemoveButtonClass(), '');
+          assert.equal(element._getRemoveButtonClass(false), '');
+          assert.equal(element._getRemoveButtonClass(true), 'not-shown');
         });
 
-        test('hideRemoveButton hides the remove facet button', function() {
-          element.facetSelection['Los Angeles, CA'] = {
-            text: 'Los Angeles, CA',
-            key: 'Los Angeles, CA',
-            count: 10,
-            enabled: true,
-            category: 'City'
+        test('hideRemoveButton hides the remove facet button', function(done) {
+          element.facets = {
+            city: {
+              'Los Angeles, CA': {
+                text: 'Los Angeles, CA',
+                key: 'Los Angeles, CA',
+                count: 10,
+                enabled: true,
+                category: 'City'
+              }
+            }
           };
-          element.notifyPath('facetSelection.*', element.facetSelection['Los Angeles, CA']);
+          element.facetKey = 'city';
           element.hideRemoveButton = true;
 
           flush(function() {
-            assert.equal(element._getFacetSelectionKeys(), 1);
-            assert.equal(element._getRemoveButtonClass(), 'not-shown');
+            assert.deepEqual(element._getFacetTerms('city', 'enabled'), ['Los Angeles, CA']);
             assert.isNotNull(element.$$('breadbox-item'));
-            assert.isNull(element.$$('iron-icon'));
+            assert.isNotNull(element.$$('iron-icon'));
+            assert.isTrue(element.$$('iron-icon').classList.contains('not-shown'));
             done();
           });
         });

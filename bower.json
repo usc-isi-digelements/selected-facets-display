@@ -1,7 +1,7 @@
 {
   "name": "selected-facets-display",
   "description": "A Polymer Element providing a way to view and remove selected facets in a breadbox-item element.",
-  "version": "1.0.13",
+  "version": "1.1.0",
   "authors": ["Next Century Corporation"],
   "license": "Apache-2.0",
   "keywords": [
@@ -17,7 +17,7 @@
   ],
   "dependencies": {
     "polymer": "Polymer/polymer#^1.7.0",
-    "breadbox-item": "DigElements/breadbox-item#^1.0.2",
+    "breadbox-item": "DigElements/breadbox-item#1.0.3",
     "iron-elements": "PolymerElements/iron-elements#^1.0.10",
     "paper-styles": "PolymerElements/paper-styles#^1.1.5",
     "lodash-import": "DigElements/lodash-import#~1.0.0"

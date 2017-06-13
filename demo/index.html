@@ -21,6 +21,7 @@ limitations under the License.
     <title>selected-facets-display Demo</title>
     <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
     <link rel="import" href="../selected-facets-display.html">
+    <link rel="import" href="../bower_components/lodash/lodash.min.js">
   </head>
   <body unresolved>
     <template is="dom-bind" id="demo">
@@ -28,21 +29,23 @@ limitations under the License.
       <br/>
       {
       <br/>
-       &nbsp;&nbsp;&nbsp;&nbsp;'New York': {{stringify(facetSelection.*, 'New York')}},<br/>
-       &nbsp;&nbsp;&nbsp;&nbsp;'Jane Doe': {{stringify(facetSelection.*, 'Jane Doe')}},<br/>
-       &nbsp;&nbsp;&nbsp;&nbsp;'one two three': {{stringify(facetSelection.*, 'one two three')}}<br/>
+       &nbsp;&nbsp;&nbsp;&nbsp;'New York': [[stringify(facets.city.*, 'New York')]],<br/>
+       &nbsp;&nbsp;&nbsp;&nbsp;'Jane Doe': [[stringify(facets.city.*, 'Jane Doe')]],<br/>
+       &nbsp;&nbsp;&nbsp;&nbsp;'one two three': [[stringify(facets.city.*, 'one two three')]]<br/>
       }
       <p>Display:</p>
-      <selected-facets-display facet-selection="{{facetSelection}}">
+      <selected-facets-display facet-key="city" facets="{{facets}}">
       </selected-facets-display>
     </template>
     <script>
       (function(document) {
         var demo = document.querySelector('#demo');
-        demo.facetSelection = {
-          'New York': {text: 'New York, NY', key: 'New York', count: 10, enabled: true, category: 'City'},
-          'Jane Doe': {text: 'Jane Doe', key: 'Jane Doe', count: 10, enabled: true, category: 'Name'},
-          'one two three': {text: 'one two three four five six seven eight nine ten', key: 'one two three', count: 10, enabled: true, category: 'Words'}
+        demo.facets = {
+          city: {
+            'New York': {text: 'New York, NY', key: 'New York', count: 10, enabled: true, category: 'City'},
+            'Jane Doe': {text: 'Jane Doe', key: 'Jane Doe', count: 10, enabled: true, category: 'Name'},
+            'one two three': {text: 'one two three four five six seven eight nine ten', key: 'one two three', count: 10, enabled: true, category: 'Words'}
+          }
         };
         demo.stringify = function(object, key) {
           return JSON.stringify(object.base[key]);
