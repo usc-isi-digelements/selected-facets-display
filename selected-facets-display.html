@@ -16,8 +16,8 @@ limitations under the License.
 
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../breadbox-item/breadbox-item.html">
-<link rel="import" href="../iron-icons/iron-icons.html">
 <link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
 <link rel="import" href="../paper-styles/color.html">
 <link rel="import" href="../lodash-import/lodash.html">
 
@@ -50,9 +50,9 @@ var facets = {
 
 Custom property                     | Description                     | Default
 ------------------------------------|---------------------------------|----------------------
-`--selected-facet-bg-color`         | Background color of a facet tag | --paper-blue-grey-200
-`--selected-facet-text-color`       | Text color for facets           | --paper-blue-grey-800
-`--selected-facet-icon-hover-color` | Color for close icon on hover   | --paper-blue-800
+`--selected-facet-bg-color`         | Background color of a facet tag | --paper-grey-400
+`--selected-facet-text-color`       | Text color for facets           | --paper-grey-800
+`--selected-facet-icon-hover-color` | Color for close icon on hover   | --paper-red-800
 
 @demo demo/index.html
 -->
@@ -61,18 +61,21 @@ Custom property                     | Description                     | Default
   <template>
     <style>
       breadbox-item {
-        --breadbox-item-bg-color: var(--selected-facet-bg-color, --paper-blue-grey-200);
-        --breadbox-item-text-color: var(--selected-facet-text-color, --paper-blue-grey-800);
+        --breadbox-item-bg-color: var(--selected-facet-bg-color, var(--paper-grey-400));
+        --breadbox-item-text-color: var(--selected-facet-text-color, var(--paper-grey-800));
       }
-      breadbox-item ::content iron-icon {
+
+      iron-icon {
         --iron-icon-height: 18px;
         --iron-icon-width: 18px;
         vertical-align: middle;
       }
-      breadbox-item ::content iron-icon:hover {
-        color: var(--selected-facet-icon-hover-color, --paper-blue-800);
+
+      iron-icon:hover {
+        color: var(--selected-facet-icon-hover-color, var(--paper-red-800));
         cursor: pointer;
       }
+
       .not-shown {
         display: none;
       }
