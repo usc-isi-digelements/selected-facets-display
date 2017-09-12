@@ -29,9 +29,10 @@ var facets = {
 
 Custom property                     | Description                     | Default
 ------------------------------------|---------------------------------|----------------------
-`--selected-facet-bg-color`         | Background color of a facet tag | --paper-blue-grey-200
-`--selected-facet-text-color`       | Text color for facets           | --paper-blue-grey-800
-`--selected-facet-icon-hover-color` | Color for close icon on hover   | --paper-blue-800
+`--selected-facet-bg-color`         | Background color of a facet tag | --paper-grey-400
+`--selected-facet-icon-hover-color` | Color for close icon on hover   | --paper-red-800
+`--selected-facet-item-style-mixin` | Custom style mixin of each item | none
+`--selected-facet-text-color`       | Text color for facets           | --paper-grey-800
 
 ### Dependencies
 
