@@ -51,9 +51,9 @@ var facets = {
 Custom property                     | Description                     | Default
 ------------------------------------|---------------------------------|----------------------
 `--selected-facet-bg-color`         | Background color of a facet tag | --paper-grey-400
-`--selected-facet-icon-hover-color` | Color for close icon on hover   | --paper-red-800
+`--selected-facet-icon-hover-color` | Color for close icon on hover   | --paper-red-900
 `--selected-facet-item-style-mixin` | Custom style mixin of each item | none
-`--selected-facet-text-color`       | Text color for facets           | --paper-grey-800
+`--selected-facet-text-color`       | Text color for facets           | --paper-grey-900
 
 @demo demo/index.html
 -->
@@ -63,7 +63,7 @@ Custom property                     | Description                     | Default
     <style>
       breadbox-item {
         --breadbox-item-bg-color: var(--selected-facet-bg-color, var(--paper-grey-400));
-        --breadbox-item-text-color: var(--selected-facet-text-color, var(--paper-grey-800));
+        --breadbox-item-text-color: var(--selected-facet-text-color, var(--paper-grey-900));
         --breadbox-item-style-mixin: var(--selected-facet-item-style-mixin);
       }
 
@@ -74,7 +74,7 @@ Custom property                     | Description                     | Default
       }
 
       iron-icon:hover {
-        color: var(--selected-facet-icon-hover-color, var(--paper-red-800));
+        color: var(--selected-facet-icon-hover-color, var(--paper-red-900));
         cursor: pointer;
       }
 
