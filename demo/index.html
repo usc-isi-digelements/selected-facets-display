@@ -30,29 +30,50 @@ limitations under the License.
         var demo = document.querySelector('#demo');
         demo.facets = {
           city: {
-            'New York': {text: 'New York, NY', key: 'New York', count: 10, enabled: true, category: 'City'},
-            'Jane Doe': {text: 'Jane Doe', key: 'Jane Doe', count: 10, enabled: true, category: 'Name'},
-            'one two three': {text: 'one two three four five six seven eight nine ten', key: 'one two three', count: 10, enabled: true, category: 'Words'}
+            'New York': {
+              text: 'New York, NY',
+              key: 'New York',
+              enabled: true,
+              count: 10,
+              category: 'City'
+            },
+            'Washington': {
+              text: 'Washington, D.C.',
+              search: 'union',
+              key: 'Washington',
+              enabled: true,
+              count: 10,
+              category: 'City'
+            },
+            'Jane Doe': {
+              text: 'Jane Doe',
+              search: 'required',
+              key: 'Jane Doe',
+              enabled: true,
+              count: 10,
+              category: 'Name'
+            },
+            'one two three': {
+              text: 'one two three four five six seven eight nine ten',
+              search: 'excluded',
+              key: 'one two three',
+              enabled: true,
+              count: 10,
+              category: 'Words'
+            }
           }
         };
-        demo.stringify = function(object, key) {
-          return JSON.stringify(object.base[key]);
+
+        demo.stringify = function(object) {
+          return JSON.stringify(object);
         };
       })(document);
     </script>
 
     <template is="dom-bind">
-      <span>Current facets object:</span>
-      <br/>
-      {
-      <br/>
-       &nbsp;&nbsp;&nbsp;&nbsp;'New York': [[stringify(facets.city.*, 'New York')]],<br/>
-       &nbsp;&nbsp;&nbsp;&nbsp;'Jane Doe': [[stringify(facets.city.*, 'Jane Doe')]],<br/>
-       &nbsp;&nbsp;&nbsp;&nbsp;'one two three': [[stringify(facets.city.*, 'one two three')]]<br/>
-      }
-      <p>Display:</p>
-      <selected-facets-display facet-key="city" facets="{{facets}}">
-      </selected-facets-display>
+      <p>Facets: <strong>[[stringify(facets, facets.*)]]</strong></p>
+
+      <selected-facets-display facet-key="city" facets="{{facets}}"></selected-facets-display>
     </template>
   </dom-bind>
 </body>

@@ -70,7 +70,6 @@ Custom property                     | Description                     | Default
       iron-icon {
         --iron-icon-height: 18px;
         --iron-icon-width: 18px;
-        vertical-align: middle;
       }
 
       iron-icon:hover {
@@ -85,9 +84,11 @@ Custom property                     | Description                     | Default
 
     <template is="dom-repeat" items="[[_getFacetTerms(facetKey, enabledProperty, facets.*)]]" as="term">
       <breadbox-item
+        icon="[[_getIconProperty(facetKey, term, searchProperty, iconConfig)]]"
+        icon-text="[[_getTermProperty(facetKey, term, searchProperty)]]"
         text="[[_getTermProperty(facetKey, term, categoryProperty)]]: [[_getTermProperty(facetKey, term, textProperty, facets.*)]]"
         title$="[[_getTermProperty(facetKey, term, categoryProperty)]]: [[_getTermProperty(facetKey, term, textProperty, facets.*)]]">
-        <iron-icon title="Remove" on-tap="_disableFacet" class$="[[_getRemoveButtonClass(hideRemoveButton)]]" icon="close"></iron-icon>
+        <iron-icon title="Remove Term" on-tap="_disableFacet" class$="[[_getRemoveButtonClass(hideRemoveButton)]]" icon="close"></iron-icon>
       </breadbox-item>
     </template>
   </template>
@@ -121,6 +122,51 @@ Custom property                     | Description                     | Default
         enabledProperty: {
           type: String,
           value: 'enabled'
+        },
+
+        /**
+         * (Optional)
+         *
+         * The values of the search property mapped to their icons.
+         *
+         * @type {String}
+         * @default { excluded: 'remove', required: 'add', union: 'star' }
+         */
+        iconConfig: {
+          type: Object,
+          value: function() {
+            return {
+              excluded: 'remove',
+              required: 'add',
+              union: 'star'
+            };
+          }
+        },
+
+        /**
+         * (Optional)
+         *
+         * Name for the search property in the objects in `facets`.
+         *
+         * @type {String}
+         * @default 'search'
+         */
+        searchProperty: {
+          type: String,
+          value: 'search'
+        },
+
+        /**
+         * (Optional)
+         *
+         * Name for the text property in the objects in `facets`.
+         *
+         * @type {String}
+         * @default 'text'
+         */
+        textProperty: {
+          type: String,
+          value: 'text'
         },
 
         /**
@@ -176,6 +222,21 @@ Custom property                     | Description                     | Default
           type: Boolean,
           value: false
         }
+      },
+
+      /**
+       * Returns the icon using the given iconConfig for the string at the given property in the given term for the facets object in `facets` at the given key.
+       *
+       * @param {String} facetKey
+       * @param {String} term
+       * @param {String} property
+       * @param {Object} iconConfig
+       * @return {String}
+       * @private
+       */
+      _getIconProperty: function(facetKey, term, property, iconConfig) {
+        var value = this._getTermProperty(facetKey, term, property);
+        return iconConfig ? (iconConfig[value] || value) : value;
       },
 
       /**
