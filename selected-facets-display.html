@@ -16,6 +16,7 @@ limitations under the License.
 
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../breadbox-item/breadbox-item.html">
+<link rel="import" href="../fontawesome-iconset/fa-all.html">
 <link rel="import" href="../iron-icon/iron-icon.html">
 <link rel="import" href="../iron-icons/iron-icons.html">
 <link rel="import" href="../paper-styles/color.html">
@@ -68,8 +69,8 @@ Custom property                     | Description                     | Default
       }
 
       iron-icon {
-        --iron-icon-height: 18px;
-        --iron-icon-width: 18px;
+        --iron-icon-height: 16px;
+        --iron-icon-width: 16px;
       }
 
       iron-icon:hover {
@@ -83,12 +84,13 @@ Custom property                     | Description                     | Default
     </style>
 
     <template is="dom-repeat" items="[[_getFacetTerms(facetKey, enabledProperty, facets.*)]]" as="term">
+      <!-- The icon and icon text must both observe facets.* in order to update correctly. -->
       <breadbox-item
-        icon="[[_getIconProperty(facetKey, term, searchProperty, iconConfig)]]"
-        icon-text="[[_getTermProperty(facetKey, term, searchProperty)]]"
+        icon="[[_getIconProperty(facetKey, term, searchProperty, iconConfig, facets.*)]]"
+        icon-text="[[_getTermProperty(facetKey, term, searchProperty, facets.*)]]"
         text="[[_getTermProperty(facetKey, term, categoryProperty)]]: [[_getTermProperty(facetKey, term, textProperty, facets.*)]]"
         title$="[[_getTermProperty(facetKey, term, categoryProperty)]]: [[_getTermProperty(facetKey, term, textProperty, facets.*)]]">
-        <iron-icon title="Remove Term" on-tap="_disableFacet" class$="[[_getRemoveButtonClass(hideRemoveButton)]]" icon="close"></iron-icon>
+        <iron-icon title="Remove Term" on-tap="_disableFacet" class$="[[_getRemoveButtonClass(hideRemoveButton)]]" icon="fa:times"></iron-icon>
       </breadbox-item>
     </template>
   </template>
@@ -136,9 +138,10 @@ Custom property                     | Description                     | Default
           type: Object,
           value: function() {
             return {
-              excluded: 'remove',
-              required: 'add',
-              union: 'star'
+              excluded: 'fa:minus',
+              optional: 'fa:search',
+              required: 'fa:plus',
+              union: 'fa:asterisk'
             };
           }
         },
