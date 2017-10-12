@@ -27,12 +27,13 @@ var facets = {
 
 `<selected-facets-display>` provides the following custom properties and mixins for styling:
 
-Custom property                     | Description                     | Default
-------------------------------------|---------------------------------|----------------------
-`--selected-facet-bg-color`         | Background color of a facet tag | --paper-grey-400
-`--selected-facet-icon-hover-color` | Color for close icon on hover   | --paper-red-900
-`--selected-facet-item-style-mixin` | Custom style mixin of each item | none
-`--selected-facet-text-color`       | Text color for facets           | --paper-grey-900
+Custom property                     | Description                           | Default
+------------------------------------|---------------------------------------|--------
+`--selected-facet-bg-color`         | The background color of the items.    | --paper-grey-400
+`--selected-facet-icon-color`       | The color of the icon(s).             | --paper-grey-900
+`--selected-facet-icon-hover-color` | The color of the close icon on hover. | --paper-red-900
+`--selected-facet-item-style-mixin` | The custom style mixin of the items.  | none
+`--selected-facet-text-color`       | The text color of the items.          | --paper-grey-900
 
 ### Dependencies
 
