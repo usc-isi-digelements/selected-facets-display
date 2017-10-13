@@ -76,6 +76,7 @@ Custom property                     | Description                           | De
         --iron-icon-height: 16px;
         --iron-icon-width: 16px;
         color: var(--selected-facet-icon-color, var(--paper-grey-900));
+        margin-left: 5px;
       }
 
       iron-icon:hover {
@@ -92,9 +93,8 @@ Custom property                     | Description                           | De
       <!-- The icon and icon text must both observe facets.* in order to update correctly. -->
       <breadbox-item
         icon="[[_getIconProperty(facetKey, term, searchProperty, iconConfig, facets.*)]]"
-        icon-text="[[_getTermProperty(facetKey, term, searchProperty, facets.*)]]"
-        text="[[_getTermProperty(facetKey, term, categoryProperty)]]: [[_getTermProperty(facetKey, term, textProperty, facets.*)]]"
-        title$="[[_getTermProperty(facetKey, term, categoryProperty)]]: [[_getTermProperty(facetKey, term, textProperty, facets.*)]]">
+        icon-text="[[_getIconTextProperty(facetKey, term, searchProperty, iconConfig, facets.*)]]"
+        text="[[_getTermProperty(facetKey, term, categoryProperty)]]: [[_getTermProperty(facetKey, term, textProperty, facets.*)]]">
         <iron-icon title="Remove Term" on-tap="_disableFacet" class$="[[_getRemoveButtonClass(hideRemoveButton)]]" icon="fa:times"></iron-icon>
       </breadbox-item>
     </template>
@@ -137,16 +137,28 @@ Custom property                     | Description                           | De
          * The values of the search property mapped to their icons.
          *
          * @type {String}
-         * @default { excluded: 'remove', required: 'add', union: 'star' }
+         * @default { excluded: { icon: 'fa:minus', text: 'Excluded' }, optional: { icon: 'fa:search', text: 'Optional' }, required: { icon: 'fa:plus', text: 'Required' }, union: { icon: 'fa:asterisk', text: 'Required Grouping' } }
          */
         iconConfig: {
           type: Object,
           value: function() {
             return {
-              excluded: 'fa:minus',
-              optional: 'fa:search',
-              required: 'fa:plus',
-              union: 'fa:asterisk'
+              excluded: {
+                icon: 'fa:minus',
+                text: 'Excluded'
+              },
+              optional: {
+                icon: 'fa:search',
+                text: 'Optional'
+              },
+              required: {
+                icon: 'fa:plus',
+                text: 'Required'
+              },
+              union: {
+                icon: 'fa:asterisk',
+                text: 'Required Grouping'
+              }
             };
           }
         },
@@ -244,7 +256,22 @@ Custom property                     | Description                           | De
        */
       _getIconProperty: function(facetKey, term, property, iconConfig) {
         var value = this._getTermProperty(facetKey, term, property);
-        return iconConfig ? (iconConfig[value] || value) : value;
+        return iconConfig && iconConfig[value] ? (iconConfig[value].icon || value) : value;
+      },
+
+      /**
+       * Returns the icon text using the given iconConfig for the string at the given property in the given term for the facets object in `facets` at the given key.
+       *
+       * @param {String} facetKey
+       * @param {String} term
+       * @param {String} property
+       * @param {Object} iconConfig
+       * @return {String}
+       * @private
+       */
+      _getIconTextProperty: function(facetKey, term, property, iconConfig) {
+        var value = this._getTermProperty(facetKey, term, property);
+        return iconConfig && iconConfig[value] ? (iconConfig[value].text || value) : value;
       },
 
       /**
