@@ -17,6 +17,7 @@ limitations under the License.
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../breadbox-item/breadbox-item.html">
 <link rel="import" href="../fontawesome-iconset/fa-all.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../iron-icon/iron-icon.html">
 <link rel="import" href="../iron-icons/iron-icons.html">
 <link rel="import" href="../paper-styles/color.html">
@@ -62,11 +63,24 @@ Custom property                     | Description                           | De
 
 <dom-module id="selected-facets-display">
   <template>
+    <style include="iron-flex iron-flex-alignment iron-flex-factors"></style>
+
     <style>
+      :host {
+        @apply --layout-horizontal;
+        @apply --layout-wrap;
+      }
+
       breadbox-item {
         --breadbox-item-bg-color: var(--selected-facet-bg-color, var(--paper-grey-400));
-        --breadbox-item-style-mixin: var(--selected-facet-item-style-mixin);
         --breadbox-item-text-color: var(--selected-facet-text-color, var(--paper-grey-900));
+
+        --breadbox-item-style-mixin: {
+          margin-right: 6px;
+          margin-bottom: 6px;
+          @apply --selected-facet-item-style-mixin;
+        };
+
         --breadbox-item-icon-style-mixin: {
           color: var(--selected-facet-icon-color, var(--paper-grey-900));
         };
@@ -95,6 +109,7 @@ Custom property                     | Description                           | De
         icon="[[_getIconProperty(facetKey, term, searchProperty, iconConfig, facets.*)]]"
         icon-text="[[_getIconTextProperty(facetKey, term, searchProperty, iconConfig, facets.*)]]"
         text="[[_getTermProperty(facetKey, term, categoryProperty)]]: [[_getTermProperty(facetKey, term, textProperty, facets.*)]]">
+
         <iron-icon title="Remove Term" on-tap="_disableFacet" class$="[[_getRemoveButtonClass(hideRemoveButton)]]" icon="fa:times"></iron-icon>
       </breadbox-item>
     </template>
