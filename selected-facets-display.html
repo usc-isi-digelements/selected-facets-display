@@ -152,7 +152,7 @@ Custom property                     | Description                           | De
          * The values of the search property mapped to their icons.
          *
          * @type {String}
-         * @default { excluded: { icon: 'fa:minus', text: 'Excluded' }, optional: { icon: 'fa:search', text: 'Optional' }, required: { icon: 'fa:plus', text: 'Required' }, union: { icon: 'fa:asterisk', text: 'Required Grouping' } }
+         * @default { excluded: { icon: 'fa:minus', text: 'Excluded' }, lessthan: { icon: 'fa:chevron-left', text: 'Less Than' }, morethan: { icon: 'fa:chevron-right', text: 'Greater Than' }, optional: { icon: 'fa:search', text: 'Optional' }, required: { icon: 'fa:plus', text: 'Required' }, union: { icon: 'fa:asterisk', text: 'Required Grouping' } }
          */
         iconConfig: {
           type: Object,
@@ -161,6 +161,14 @@ Custom property                     | Description                           | De
               excluded: {
                 icon: 'fa:minus',
                 text: 'Excluded'
+              },
+              lessthan: {
+                icon: 'fa:chevron-left',
+                text: 'Less Than'
+              },
+              morethan: {
+                icon: 'fa:chevron-right',
+                text: 'Greater Than'
               },
               optional: {
                 icon: 'fa:search',
