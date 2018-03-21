@@ -231,7 +231,25 @@ limitations under the License.
           element._disableFacet(clickEvent);
         });
 
-        test('_getRemoveButtonClass returns correct string value', function() {
+        test('_getColor does return expected string', function() {
+          assert.equal(element._getColor({}, ''), '');
+          assert.equal(element._getColor({
+            key1: 'red'
+          }, ''), '');
+          assert.equal(element._getColor({}, 'key1'), '');
+          assert.equal(element._getColor({
+            key1: 'red'
+          }, 'key1'), 'red');
+          assert.equal(element._getColor({
+            key1: 'red'
+          }, 'key2'), '');
+          assert.equal(element._getColor({
+            key1: 'red',
+            key2: 'blue'
+          }, 'key2'), 'blue');
+        });
+
+        test('_getRemoveButtonClass does return expected string', function() {
           assert.equal(element._getRemoveButtonClass(false), '');
           assert.equal(element._getRemoveButtonClass(true), 'not-shown');
         });

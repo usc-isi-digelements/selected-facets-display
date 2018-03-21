@@ -29,7 +29,6 @@ var facets = {
 
 Custom property                     | Description                           | Default
 ------------------------------------|---------------------------------------|--------
-`--selected-facet-bg-color`         | The background color of the items.    | --paper-grey-400
 `--selected-facet-icon-color`       | The color of the icon(s).             | --paper-grey-900
 `--selected-facet-icon-hover-color` | The color of the close icon on hover. | --paper-red-900
 `--selected-facet-item-style-mixin` | The custom style mixin of the items.  | none
